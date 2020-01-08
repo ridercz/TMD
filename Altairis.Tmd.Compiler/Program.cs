@@ -3,6 +3,7 @@ using System.IO;
 using NConsoler;
 using Altairis.Tmd.Core;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace Altairis.Tmd.Compiler {
     class Program {
@@ -25,12 +26,42 @@ namespace Altairis.Tmd.Compiler {
             [Required(Description = "Input file name")] string inputFileName,
             [Optional(null, "o", Description = "Output file name")] string outputFileName,
             [Optional(false, "os", Description = "Open output file in default browser")] bool startOutputFile,
+            [Optional(null, "c", Description = "Path to configuration file")] string configFileName,
             [Optional(null, "t", Description = "Document template file name")] string templateFileName,
             [Optional("<!--body-->", "tp", Description = "Template placeholder for body")] string templatePlaceholder,
             [Optional(false, Description = "Show detailed exception messages")] bool debug
             ) {
 
             debugMode = debug;
+
+            // Read or write configuration
+            var renderOptions = new TmdRenderOptions {
+                InformationTemplate = "<tr class=\"information\">\r\n\t<th>&#9432;</th>\r\n\t<td>{0}</td>\r\n</tr>",
+                WarningTemplate = "<tr class=\"warning\">\r\n\t<th>&#9888;</th>\r\n\t<td>{0}</td>\r\n</tr>",
+                DownloadTemplate = "<tr class=\"download\">\r\n\t<th>&#128426;</th>\r\n\t<td>{0}</td>\r\n</tr>"
+            };
+            var parserOptions = new TmdParserOptions();
+            var config = new CompilerConfiguration { RenderOptions = renderOptions, ParserOptions = parserOptions };
+
+            if (!string.IsNullOrWhiteSpace(configFileName)) {
+                if (File.Exists(configFileName)) {
+                    TryDo(
+                        $"Reading configuration from {configFileName}...",
+                        () => {
+                            var json = File.ReadAllText(configFileName);
+                            config = JsonSerializer.Deserialize<CompilerConfiguration>(json);
+                        }
+                    );
+                } else {
+                    TryDo(
+                        $"Writing default configuration to {configFileName}...",
+                        () => {
+                            var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+                            File.WriteAllText(configFileName, json);
+                        }
+                    );
+                }
+            }
 
             // Read source
             var source = TryDo(
@@ -46,12 +77,7 @@ namespace Altairis.Tmd.Compiler {
             );
 
             // Compile
-            var parser = new TmdParser(renderOptions: new TmdRenderOptions {
-                InformationTemplate = "<tr class=\"information\">\r\n\t<th>&#9432;</th>\r\n\t<td>{0}</td>\r\n</tr>",
-                WarningTemplate = "<tr class=\"warning\">\r\n\t<th>&#9888;</th>\r\n\t<td>{0}</td>\r\n</tr>",
-                DownloadTemplate = "<tr class=\"download\">\r\n\t<th>&#128426;</th>\r\n\t<td>{0}</td>\r\n</tr>"
-            });
-
+            var parser = new TmdParser(config.ParserOptions, config.RenderOptions);
             var html = TryDo(
                 "Compiling...",
                 () => parser.Render(source)

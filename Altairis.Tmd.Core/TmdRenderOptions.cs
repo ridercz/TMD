@@ -2,6 +2,7 @@
 using System.Resources;
 using System.Security.Cryptography;
 using Markdig;
+using System.Text.Json.Serialization;
 
 namespace Altairis.Tmd.Core {
     public class TmdRenderOptions {
@@ -24,6 +25,7 @@ namespace Altairis.Tmd.Core {
 
         public string StepLinkTemplate { get; set; } = "<a href=\"{0}\">{1}</a>";
 
+        [JsonIgnore]
         public MarkdownPipeline MarkdownPipeline { get; set; } = new MarkdownPipelineBuilder()
                 .UseAbbreviations()
                 .UseCitations()
@@ -36,6 +38,7 @@ namespace Altairis.Tmd.Core {
                 .UseMediaLinks()
                 .Build();
 
+        [JsonIgnore]
         public HashAlgorithm ContentHashAlgorithm { get; set; } = new SHA256Managed();
 
         public static TmdRenderOptions FromResource(ResourceManager rm) {
