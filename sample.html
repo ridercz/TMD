@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="generator" content="Tutorial Markdown Compiler; https://github.com/ridercz/TMD" />
+    <style type="text/css">
+        html {
+            font-family: Verdana, Tahoma, sans-serif;
+            font-size: 12pt;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 3em;
+        }
+
+        body {
+            max-width: 1000px;
+            margin: 0 auto 0 auto;
+            line-height: 150%;
+        }
+
+            body > footer {
+                font-size: 10pt;
+                text-align: right;
+                margin-top: 1em;
+                color: #ccc;
+            }
+
+                body > footer a:link, body > footer a:visited {
+                    color: #ccc;
+                }
+
+                body > footer a:hover, body > footer a:active {
+                    color: #000;
+                }
+
+
+        table.steps {
+            border: 1px solid #999;
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            table.steps td {
+                border: 1px solid #999;
+                padding: 1ex;
+            }
+
+                table.steps td *:nth-child(1) {
+                    margin-top: 0;
+                }
+
+                table.steps td *:nth-last-child(1) {
+                    margin-bottom: 0;
+                }
+
+                table.steps td img {
+                    display: block;
+                    max-width: 90%;
+                    margin: 0 auto;
+                }
+
+            table.steps th {
+                border: 1px solid #999;
+                padding: 1ex;
+                width: 4ex;
+                vertical-align: top;
+                text-align: right;
+                font-weight: normal;
+            }
+
+            table.steps tr.information {
+                background-color: #ffa;
+            }
+
+                table.steps tr.information th {
+                    font-size: 150%;
+                    padding: 1ex 0;
+                    text-align: center;
+                    border-right: none;
+                }
+
+                table.steps tr.information td {
+                    font-style: italic;
+                    border-left: none;
+                }
+
+                table.steps tr.information code {
+                    background-color: transparent;
+                }
+
+                table.steps tr.information em, table.steps tr.information i {
+                    font-style: normal;
+                }
+
+            table.steps tr.warning {
+                background-color: #faa;
+            }
+
+                table.steps tr.warning th {
+                    font-size: 150%;
+                    padding: 1ex 0;
+                    text-align: center;
+                    border-right: none;
+                }
+
+                table.steps tr.warning td {
+                    font-weight: bold;
+                    border-left: none;
+                }
+
+                table.steps tr.warning code {
+                    background-color: transparent;
+                }
+
+                table.steps tr.warning strong, table.steps tr.warning b {
+                    font-weight: normal;
+                }
+
+            table.steps tr.download {
+                background-color: #9cf;
+            }
+
+                table.steps tr.download th {
+                    font-size: 150%;
+                    padding: 1ex 0;
+                    text-align: center;
+                    border-right: none;
+                }
+
+                table.steps tr.download td {
+                    border-left: none;
+                }
+
+            table.steps table {
+                border: none;
+                border-collapse: collapse;
+                margin: 0 auto;
+            }
+
+                table.steps table td {
+                    border: 1px solid #000;
+                }
+
+                table.steps table th {
+                    border: 1px solid #000;
+                    text-align: center;
+                    font-weight: bold;
+                    white-space: nowrap;
+                }
+
+                table.steps table thead tr:nth-last-child(1) {
+                    border-bottom: double 3px #000;
+                    background-color: #ddd;
+                }
+
+                table.steps table tbody tr:nth-child(2n) {
+                    background-color: #eee;
+                }
+
+                table.steps table tbody tr:hover {
+                    background-color: #ffa;
+                }
+
+        pre, code {
+            font-family: Consolas, Courier New, Courier, monospace;
+            font-size: 14pt;
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        pre {
+            background-color: #efe;
+            display: block;
+            padding: .5ex;
+            max-width: 900px;
+            overflow-x: auto;
+            margin: 0 auto;
+        }
+
+        ins {
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        del {
+            text-decoration: line-through;
+        }
+
+        a:link {
+            color: #03F;
+            text-decoration: underline;
+        }
+
+        a:visited, a:active {
+            color: #006;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #C00;
+        }
+    </style>
+</head>
+<body>
+    <h1>This is sample Tutorial-MD file</h1>
+<p>This file shows all the features of Tutorial Markdown (TMD) format.</p>
+<p>TMD is special format for handbooks and tutorials with numbered steps, written in markdown. The format is designed to be reasonably well rendered by any standard MD rendering engine, but in TMD-aware environment allows for special features, useful for writing labs, tutorials etc.</p>
+<table class="steps">
+<tr data-step-seqid="1" data-step-sha256="pgJHdUWvICyrdtikA4GEJNGSR3BBZSiCFXU2YTqBDnA">
+	<th>1.</th>
+	<td><p>The main tutorial building blocks are steps. They are rendered as a table and automatically numbered.</p></td>
+</tr>
+<tr data-step-seqid="2" data-step-sha256="INPKETLyJDdk+4xFj1slnmEYYGsazQKkBgbx6sXIu3c">
+	<th>2.</th>
+	<td><p>Steps are separated by <code>- - -</code> line markings on separate line (technically, the separators are either <code>\r\n- - -\r\n</code> or <code>\n- - -\n</code>, so no whitespace is allowed).</p></td>
+</tr>
+<tr data-step-seqid="3" data-step-sha256="Tr9QY/4nY3gRRjcFUDidogZZhkrcZ1Q4oHZTj0OKwg0">
+	<th>3.</th>
+	<td><p>Steps can contain any markdown code including <strong>bold</strong>, <em>italics</em>, <del>striketrough</del>, <code>inline code</code></p>
+<pre><code>or code blocks.</code></pre>
+<p>Of course it can also contain <a href="https://www.altairis.cz/">hyperlinks</a>. Automatic hyperlinks are disabled by default, because many tutorials contain sample or non-working URLs like www.example.com.</p></td>
+</tr>
+<tr data-step-seqid="4" data-step-sha256="4E4cSNonvvVyoWylMSR3YW+eM/jm6PqzAFEguKdOrjU">
+	<th>4.</th>
+	<td><p>For tutorials, we have to indicate added or removed code.</p>
+<pre><code>Markdown code blocks can't contain formatting
+such as **bold** or ~~striketrough~~.</code></pre>
+<p>So we have to use the old-fashioned HTML tags <code>pre</code>, <code>ins</code> and <code>del</code>:</p>
+<pre>
+Here goes some code
+<del>This line is to be deleted.</del>
+<ins>This line is to be added.</ins>
+</pre></td>
+</tr>
+<tr data-step-seqid="5" data-step-sha256="wgf/62JwQVzXRZdIS5W9llI//jQ5XY80rEWODEAYZzo">
+	<th>5.</th>
+	<td><p>Pipe tables are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Col 1</th>
+<th>Col 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Grid tables are supported as well:</p>
+<table>
+<col style="width:53.33%">
+<col style="width:46.67%">
+<thead>
+<tr>
+<th>Col 1</th>
+<th>Col 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Sample</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</table>
+<h2>Directives</h2>
+<table class="steps">
+<tr data-step-seqid="6" data-step-sha256="cQJKhmQ4wiU5gvRacBFkvQArNQMs3CL4XqfdbmKhwJI">
+	<th>6.</th>
+	<td><p>First line after separator can contain directives in form of HTML comments or special strings, to indicate special handling:</p>
+<ul>
+<li><code>&lt;!--$--&gt;</code> or <code>($)</code> denotes non-step text (such as subheadings or introduction or other explanation text). This text is rendered outside the main table. This directive is implied when the text starts with the <code>#</code> character (heading).</li>
+<li><code>&lt;!--i--&gt;</code> or <code>(i)</code> means information. The step will not be numbered and will have special formatting.</li>
+<li><code>&lt;!--!--&gt;</code> or <code>(!)</code> means warning. The step will not be numbered and will have special formatting to catch users attention.</li>
+<li><code>&lt;!--dl--&gt;</code> or <code>(dl)</code> means step with download. The step will not be numbered and will have special formatting.</li>
+<li><code>&lt;!--#identifier--&gt;</code> will assign specific name (<em>identifier</em>, in this case) to a given step. Other steps can then reference this named step using <code>[#identifier]</code>.
+<ul>
+<li>The identifier may contain upper- and lowercase English letters, underscore (<code>_</code>) and a minus sign (<code>-</code>).</li>
+<li>The identifier must be document-unique.</li>
+<li>Identifiers are case sensitive.</li>
+</ul>
+</li>
+</ul></td>
+</tr>
+</table>
+<h2>Examples of T/MD directives</h2>
+<table class="steps">
+<tr id="mystep" data-step-seqid="7" data-step-sha256="V4D1ZksNpb/NlDKHEJwj+TBGcc0gW4mq3RtpzKy6j1Y">
+	<th>7.</th>
+	<td><p>This is a named step (it's internal name is <em>mystep</em>) and will be referenced later.</p></td>
+</tr>
+<tr class="information">
+	<th>&#9432;</th>
+	<td><p>This step is formatted as some <em>information</em> message.</p>
+<pre><code>Even messages can contain some code etc.</code></pre></td>
+</tr>
+<tr class="warning">
+	<th>&#9888;</th>
+	<td><p>This step is formatted as some <strong>warning</strong> message.</p></td>
+</tr>
+<tr class="download">
+	<th>&#128426;</th>
+	<td><p>This step is formatted like download instruction.</p></td>
+</tr>
+</table>
+<p>This is just a some text outside the table created using the <code>&lt;!--$--&gt;</code> directive.</p>
+<table class="steps">
+<tr data-step-seqid="8" data-step-sha256="4xVbXbpyB4UM5sEbbNkjjvGsOTWeZ03puGvlUfDTmi8">
+	<th>8.</th>
+	<td><p>This step references previous step number <a href="#mystep">7</a>. The number is generated automatically.</p></td>
+</tr>
+<tr data-step-seqid="9" data-step-sha256="Xs75JRGSUOQKWuP/T5EQBQb4y90xXwXVSkvj0kWO/NU">
+	<th>9.</th>
+	<td><p>You may also create <a href="#mystep">direct named link</a> to a step.</p></td>
+</tr>
+<tr data-step-seqid="10" data-step-sha256="xof2YStUiUWGHVy+f55cNKqEqh8NvqkOyNYiX0Jn1cc">
+	<th>10.</th>
+	<td><p>This is just a regular step thrown here for a good measure.</p></td>
+</tr>
+</table>
+
+    <footer>
+        Generated using <a href="https://github.com/ridercz/TMD">Tutorial Markdown Compiler</a>
+    </footer>
+</body>
+</html>
