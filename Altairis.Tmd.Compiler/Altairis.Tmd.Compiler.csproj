@@ -24,6 +24,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\sample.txt" Link="sample.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Altairis.Tmd.Core\Altairis.Tmd.Core.csproj" />
   </ItemGroup>
 
@@ -32,9 +38,6 @@
     <None Include="..\NuGet-64x64.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
-    </None>
-    <None Include="..\sample.md" Link="sample.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
