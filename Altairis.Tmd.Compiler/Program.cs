@@ -1,18 +1,18 @@
 ﻿using System;
-using System.IO;
-using NConsoler;
-using Altairis.Tmd.Core;
 using System.Diagnostics;
+using System.IO;
 using System.Text.Json;
+using Altairis.Tmd.Core;
+using NConsoler;
 
 namespace Altairis.Tmd.Compiler {
-    class Program {
+    internal class Program {
         private const int ERRORLEVEL_SUCCESS = 0;
         private const int ERRORLEVEL_FAILURE = 1;
 
         private static bool debugMode;
 
-        static void Main(string[] args) {
+        private static void Main(string[] args) {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Console.WriteLine($"TMDC: Tutorial Markdown Compiler version {version:4}");
             Console.WriteLine("Copyright (c) Michal Altair Valasek - Altairis, 2019-2020");
