@@ -8,6 +8,7 @@
     <ToolCommandName>dotnet-tmdc</ToolCommandName>
     <Version>1.1.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>../NuGet</PackageOutputPath>
     <PackageId>Altairis.Tmd.Compiler</PackageId>
     <Title>Tutorial Markdown Compiler</Title>
     <Authors>Michal Altair Valášek</Authors>
