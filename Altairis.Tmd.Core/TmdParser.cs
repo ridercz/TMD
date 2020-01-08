@@ -15,6 +15,11 @@ namespace Altairis.Tmd.Core {
             this.renderOptions = renderOptions ?? new TmdRenderOptions();
         }
 
+        public static string RenderWithDefaults(string source) {
+            var p = new TmdParser();
+            return p.Render(source);
+        }
+
         public string Render(string source) {
             if (string.IsNullOrWhiteSpace(source)) return null;
 
