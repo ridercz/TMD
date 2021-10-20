@@ -23,7 +23,7 @@ namespace Altairis.Tmd.Compiler {
 
         [Action("Compile TMD file to HTML")]
         public static void Compile(
-            [Required(Description = "Input file name")] string inputFileName,
+            [Required(Description = "Input file or folder name")] string inputPath,
             [Optional(null, "o", Description = "Output file name")] string outputFileName,
             [Optional(false, "os", Description = "Open output file in default browser")] bool startOutputFile,
             [Optional(null, "c", Description = "Path to configuration file")] string configFileName,
@@ -63,6 +63,41 @@ namespace Altairis.Tmd.Compiler {
                 }
             }
 
+            if (File.Exists(inputPath)) {
+                // Compile single file
+                outputFileName = CompileSingleFile(inputPath, outputFileName, templateFileName, templatePlaceholder, config);
+                // Start output file
+                if (startOutputFile) TryDo(
+                      "Opening output file...",
+                      () => Process.Start(new ProcessStartInfo { FileName = outputFileName, UseShellExecute = true })
+                  );
+            } else if (Directory.Exists(inputPath)) {
+                // Compile directory
+                if (!string.IsNullOrEmpty(outputFileName)) Console.WriteLine("WARNING: -o option ignored for folders");
+                if (startOutputFile) Console.WriteLine("WARNING: -os option ignored for folders");
+                CompileFolder(inputPath, templateFileName, templatePlaceholder, config);
+            } else {
+                // Neither file or folder not found
+                CrashExit("Specified input path was not found.");
+            }
+            Environment.Exit(ERRORLEVEL_SUCCESS);
+        }
+
+        private static void CompileFolder(string folderName, string templateFileName, string templatePlaceholder, CompilerConfiguration config) {
+            var di = new DirectoryInfo(folderName);
+
+            // Process all folders
+            foreach (var item in di.GetDirectories()) {
+                CompileFolder(item.FullName, templateFileName, templatePlaceholder, config);
+            }
+
+            // Process all files
+            foreach (var item in di.GetFiles("*.md")) {
+                CompileSingleFile(item.FullName, null, templateFileName, templatePlaceholder, config);
+            }
+        }
+
+        private static string CompileSingleFile(string inputFileName, string outputFileName, string templateFileName, string templatePlaceholder, CompilerConfiguration config) {
             // Read source
             var source = TryDo(
                 $"Reading source from {inputFileName}...",
@@ -92,14 +127,7 @@ namespace Altairis.Tmd.Compiler {
                 $"Saving to {outputFileName}...",
                 () => File.WriteAllText(outputFileName, html)
             );
-
-            // Start output file
-            if (startOutputFile) TryDo(
-                  "Opening output file...",
-                  () => Process.Start(new ProcessStartInfo { FileName = outputFileName, UseShellExecute = true })
-              ); ;
-
-            Environment.Exit(ERRORLEVEL_SUCCESS);
+            return outputFileName;
         }
 
         private static T TryDo<T>(string message, Func<T> func) {
