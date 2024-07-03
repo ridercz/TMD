@@ -17,6 +17,8 @@
     <RepositoryUrl>https://github.com/ridercz/TMD.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>NuGet-64x64.png</PackageIcon>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
