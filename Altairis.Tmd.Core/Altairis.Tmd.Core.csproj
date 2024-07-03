@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>../NuGet</PackageOutputPath>
     <PackageId>Altairis.Tmd.Core</PackageId>
@@ -10,7 +10,7 @@
     <Authors>Michal Altair Valášek</Authors>
     <Company>Altairis, s. r. o.</Company>
     <Description>Tutorial Markdown Core</Description>
-    <Copyright>(c) Michal Altair Valášek - Altairis, 2019-2021</Copyright>
+    <Copyright>(c) Michal Altair Valášek - Altairis, 2019-2024</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ridercz/TMD</PackageProjectUrl>
     <Product>Tutorial Markdown</Product>
@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.26.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 
   <ItemGroup>
