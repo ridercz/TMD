@@ -6,7 +6,7 @@
 		<AssemblyName>dotnet-tmdc</AssemblyName>
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>dotnet-tmdc</ToolCommandName>
-		<Version>1.4.0</Version>
+		<Version>1.4.1</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageOutputPath>../NuGet</PackageOutputPath>
 		<PackageId>Altairis.Tmd.Compiler</PackageId>
