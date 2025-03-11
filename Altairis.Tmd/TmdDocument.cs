@@ -51,12 +51,21 @@ public partial class TmdDocument {
 
     // Rendering methods
 
-    public void RenderHtml(TextWriter writer) => writer.Write(this.RenderHtml());
+    public bool RenderHtml(TextWriter writer) {
+        var result = this.RenderHtml(out var htmlString);
+        writer.Write(htmlString);
+        return result;
+    }
 
-    public void RenderHtml(string fileName) => File.WriteAllText(fileName, this.RenderHtml());
+    public bool RenderHtml(string fileName) {
+        var result = this.RenderHtml(out var htmlString);
+        File.WriteAllText(fileName, htmlString);
+        return result;
+    }
 
-    public string RenderHtml() {
-        if (this.Blocks.Count == 0) return string.Empty;
+    public bool RenderHtml(out string htmlString) {
+        htmlString = string.Empty;
+        if (this.Blocks.Count == 0) return true;
 
         // Prepare ouptut
         var sb = new StringBuilder();
@@ -71,6 +80,7 @@ public partial class TmdDocument {
             var src = LocalLinkRegex().Replace(block.Markdown, m => {
                 var targetName = m.Groups[1].Value;
                 var targetNumber = this.Blocks.FirstOrDefault(x => targetName.Equals(x.Name, StringComparison.Ordinal))?.StepNumber ?? 0;
+                if (targetNumber == 0) this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.UnknownBlockNameLink));
                 return targetNumber == 0 ? m.Value : string.Format(this.RenderOptions.StepLinkTemplate, "#" + targetName, targetNumber);
             });
 
@@ -116,7 +126,8 @@ public partial class TmdDocument {
         if (tableOpen) sb.AppendLine(this.RenderOptions.TableEndTemplate);
 
         // Return HTML
-        return sb.ToString();
+        htmlString = sb.ToString();
+        return this.Warnings.Count == 0;
     }
 
     // Helper methods

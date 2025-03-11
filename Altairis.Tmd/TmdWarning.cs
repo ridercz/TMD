@@ -4,7 +4,8 @@ public enum TmdWarningType {
     ContentIsEmpty,
     EmptyBlockName,
     DuplicateBlockName,
-    UnknownQualifier
+    UnknownQualifier,
+    UnknownBlockNameLink,
 }
 
 public record TmdWarning(int BlockNumber, TmdWarningType Type);
