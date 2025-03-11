@@ -1,12 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35818.85 d17.13
+VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Altairis.Tmd.Compiler", "Altairis.Tmd.Compiler\Altairis.Tmd.Compiler.csproj", "{36C56CEF-55DD-48F1-A906-D076DCB9F333}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Altairis.Tmd.Core", "Altairis.Tmd.Core\Altairis.Tmd.Core.csproj", "{4E6FF598-7A24-43EE-92F2-0161E59A89E8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5E30108-DC99-4C02-AAE8-B81D7F526D7A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -26,14 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{36C56CEF-55DD-48F1-A906-D076DCB9F333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36C56CEF-55DD-48F1-A906-D076DCB9F333}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36C56CEF-55DD-48F1-A906-D076DCB9F333}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36C56CEF-55DD-48F1-A906-D076DCB9F333}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E6FF598-7A24-43EE-92F2-0161E59A89E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E6FF598-7A24-43EE-92F2-0161E59A89E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E6FF598-7A24-43EE-92F2-0161E59A89E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E6FF598-7A24-43EE-92F2-0161E59A89E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{964DBFDC-34C7-4C23-B77E-A4767B56B1F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{964DBFDC-34C7-4C23-B77E-A4767B56B1F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{964DBFDC-34C7-4C23-B77E-A4767B56B1F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
