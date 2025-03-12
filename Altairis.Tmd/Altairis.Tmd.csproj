@@ -1,13 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>2.0.0</Version>
+		<AssemblyName>Altairis.Tmd</AssemblyName>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Michal Altair Valášek</Authors>
+		<Company>Altairis, s. r. o.</Company>
+		<Copyright>(c) Michal Altair Valášek - Altairis, 2019-2025</Copyright>
+		<Description>Solution for writing tutorials in Markdown.</Description>
+		<IncludeSymbols>True</IncludeSymbols>
+		<PackageIcon>nuget-128x128.png</PackageIcon>
+		<PackageId>Altairis.Tmd</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageOutputPath>..\NuGet\</PackageOutputPath>
+		<PackageProjectUrl>https://github.com/ridercz/TMD</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Product>Tutorial Markdown</Product>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/ridercz/TMD.git</RepositoryUrl>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Title>Tutorial Markdown - TMD</Title>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.40.0" />
-  </ItemGroup>
+	<ItemGroup>
+	  <None Include="..\nuget-128x128.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.40.0" />
+	</ItemGroup>
 
 </Project>
