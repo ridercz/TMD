@@ -1,10 +1,9 @@
 ﻿using System.Text;
 using Markdig;
-using System.Text.RegularExpressions;
 
 namespace Altairis.Tmd;
 
-public partial class TmdDocument {
+public class TmdDocument {
     private const string BlockSeparator = "- - -";
     private const string QualifierShortPrefix = "(";
     private const string QualifierShortSuffix = ")";
@@ -71,21 +70,30 @@ public partial class TmdDocument {
         var sb = new StringBuilder();
         var tableOpen = false;
 
+        // Prepare Markdown pipeline builder
+        var pipeline = this.RenderOptions.MarkdownPipelineBuilder
+            .UseStepLinks(this.Blocks)
+            .Build();
+
         // Render all steps
         foreach (var block in this.Blocks) {
             // Skip empty blocks
             if (block.Type == TmdBlockType.Empty) continue;
 
-            // Replace named step links
-            var src = LocalLinkRegex().Replace(block.Markdown, m => {
-                var targetName = m.Groups[1].Value;
-                var targetNumber = this.Blocks.FirstOrDefault(x => targetName.Equals(x.Name, StringComparison.Ordinal))?.StepNumber ?? 0;
-                if (targetNumber == 0) this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.UnknownBlockNameLink));
-                return targetNumber == 0 ? m.Value : string.Format(this.RenderOptions.StepLinkTemplate, "#" + targetName, targetNumber);
-            });
-
             // Render markdown to HTML
-            var html = Markdown.ToHtml(src, this.RenderOptions.MarkdownPipelineBuilder.Build()).Trim();
+            var html = string.Empty;
+            try {
+                html = Markdown.ToHtml(block.Markdown, pipeline).Trim();
+            } catch (Exception ex) {
+                html = $"<p><b>{ex.Message}</b></p><pre>{ex}</pre>";
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.Exception, ex.Message));
+            }
+
+            // Check for empty content
+            if (string.IsNullOrWhiteSpace(html)) {
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
+                continue;
+            }
 
             // Remove extra line breaks after code blocks
             html = html.Replace("\r\n</code></pre>", "</code></pre>");
@@ -115,7 +123,7 @@ public partial class TmdDocument {
                 } else if (block.Type == TmdBlockType.Download) {
                     sb.AppendLine(string.Format(this.RenderOptions.DownloadTemplate, html));
                 } else if (string.IsNullOrWhiteSpace(block.Name)) {
-                    sb.AppendLine(string.Format(this.RenderOptions.StepTemplate, block.StepNumber, htmlHash, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.NumberedStepTemplate, block.StepNumber, htmlHash, html));
                 } else {
                     sb.AppendLine(string.Format(this.RenderOptions.NamedStepTemplate, block.Name, block.StepNumber, htmlHash, html));
                 }
@@ -148,9 +156,9 @@ public partial class TmdDocument {
             // Check for block type qualifiers
             string? qualifier = null;
             if (blockLines[0].StartsWith(QualifierLongPrefix, StringComparison.Ordinal) && blockLines[0].EndsWith(QualifierLongSuffix, StringComparison.Ordinal)) {
-                qualifier = blockLines[0][(QualifierLongPrefix.Length + 1)..^QualifierLongSuffix.Length].Trim();
+                qualifier = blockLines[0][(QualifierLongPrefix.Length)..^QualifierLongSuffix.Length].Trim();
             } else if (blockLines[0].StartsWith(QualifierShortPrefix, StringComparison.Ordinal) && blockLines[0].EndsWith(QualifierShortSuffix, StringComparison.Ordinal)) {
-                qualifier = blockLines[0][(QualifierShortPrefix.Length + 1)..^QualifierShortSuffix.Length].Trim();
+                qualifier = blockLines[0][(QualifierShortPrefix.Length)..^QualifierShortSuffix.Length].Trim();
             }
 
             if (qualifier != null) {
@@ -160,6 +168,7 @@ public partial class TmdDocument {
                     block.Markdown = string.Empty;
                     block.Type = TmdBlockType.Empty;
                     this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
+                    continue;
                 } else {
                     // Remove first line from block content
                     block.Markdown = string.Join('\n', blockLines[1..]);
@@ -168,25 +177,29 @@ public partial class TmdDocument {
 
             // Determine block type
             if (qualifier is null) {
-                // Common numbered step
-                block.Type = TmdBlockType.NumberedStep;
-                block.StepNumber = stepNumber;
-                stepNumber++;
+                if (blockLines[0].StartsWith('#')) {
+                    // Plaintext block by virtue of starting with heading
+                    block.Type = TmdBlockType.PlainText;
+                } else {
+                    // Common numbered step
+                    block.Type = TmdBlockType.NumberedStep;
+                    block.StepNumber = stepNumber;
+                    stepNumber++;
+                }
             } else if (qualifier.StartsWith(QualifierName, StringComparison.Ordinal)) {
                 // Named step
                 block.Type = TmdBlockType.NumberedStep;
-                block.Name = qualifier[(QualifierName.Length + 1)..].Trim();
+                block.Name = qualifier[(QualifierName.Length)..].Trim();
                 block.StepNumber = stepNumber;
                 stepNumber++;
 
-                // Check for empty name
                 if (string.IsNullOrWhiteSpace(block.Name)) {
+                    // Check for empty name
                     block.Name = null;
                     this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.EmptyBlockName));
-                }
-                // Check for duplicate name
-                if (this.Blocks.Any(b => b != block && b.Name == block.Name)) {
-                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.DuplicateBlockName));
+                } else if (this.Blocks.Any(b => b != block && b.Name == block.Name)) {
+                    // Check for duplicate name
+                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.DuplicateBlockName, block.Name));
                 }
             } else if (qualifier.Equals(QualifierInformation, StringComparison.Ordinal)) {
                 // Information block
@@ -197,15 +210,21 @@ public partial class TmdDocument {
             } else if (qualifier.Equals(QualifierDownload, StringComparison.Ordinal)) {
                 // Download block
                 block.Type = TmdBlockType.Download;
-            } else if (qualifier.Equals(QualifierPlainText, StringComparison.Ordinal) && blockLines[0].StartsWith('#')) {
+            } else if (qualifier.Equals(QualifierPlainText, StringComparison.Ordinal)) {
                 // Plain text block
                 block.Type = TmdBlockType.PlainText;
+            } else if (qualifier == string.Empty) {
+                // Empty qualifier
+                block.Type = TmdBlockType.NumberedStep;
+                block.StepNumber = stepNumber;
+                stepNumber++;
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.EmptyQualifier));
             } else {
                 // Unknown qualifier
                 block.Type = TmdBlockType.NumberedStep;
                 block.StepNumber = stepNumber;
                 stepNumber++;
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.UnknownQualifier));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.UnknownQualifier, qualifier));
             }
         }
     }
@@ -256,6 +275,4 @@ public partial class TmdDocument {
         return Convert.ToBase64String(hash).Trim('=');
     }
 
-    [GeneratedRegex(@"\[\#([0-9a-zA-Z_-]+)\]")]
-    private static partial Regex LocalLinkRegex();
 }
