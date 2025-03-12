@@ -1,6 +1,7 @@
 ﻿using Markdig;
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax.Inlines;
@@ -16,13 +17,12 @@ public class StepLink : LeafInline {
 public class StepLinkInlineParser : InlineParser {
 
     public StepLinkInlineParser() {
-        this.OpeningCharacters = ['#'];
+        this.OpeningCharacters = ['['];
     }
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice) {
-        // Check if previous character is the [
-        var prevChar = slice.PeekCharExtra(-1);
-        if (prevChar != '[') return false;
+        // Check if next character is #
+        if (slice.PeekChar() != '#') return false;
 
         // Set start character to the [
         var start = slice.Start;
@@ -33,19 +33,20 @@ public class StepLinkInlineParser : InlineParser {
             slice.NextChar();
             end = slice.Start;
         } while (slice.CurrentChar != ']');
+        slice.NextChar();
 
         processor.GetSourcePosition(start, out var line, out var column);
-        var stepName = slice.Text[(start + 1)..end];
+        var stepName = slice.Text[(start + 2)..end];
         processor.Inline = new StepLink {
             Span = {
                     Start = start,
-                    End = end
+                    End = slice.End
                 },
             Line = line,
             Column = column,
             StepName = stepName
         };
-        
+
         return true;
     }
 
@@ -71,7 +72,14 @@ public class StepLinksExtension(IList<TmdBlock> blocks) : IMarkdownExtension {
 
     public void Setup(MarkdownPipelineBuilder pipeline) {
         var parsers = pipeline.InlineParsers;
-        if (!parsers.Contains<StepLinkInlineParser>()) parsers.Add(new StepLinkInlineParser());
+        if (!parsers.Contains<StepLinkInlineParser>()) {
+            // Insert the parser before the LinkInlineParser
+            if (parsers.Contains<LinkInlineParser>()) {
+                parsers.InsertBefore<LinkInlineParser>(new StepLinkInlineParser());
+            } else {
+                parsers.Add(new StepLinkInlineParser());
+            }
+        }
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer) {
