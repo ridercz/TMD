@@ -73,7 +73,10 @@ public class TmdDocument {
         // Prepare Markdown pipeline builder
         var pipeline = this.RenderOptions.MarkdownPipelineBuilder
             .UseStepLinks(this.Blocks)
+            .UseCustomCodeBlocks()
             .Build();
+
+        
 
         // Render all steps
         foreach (var block in this.Blocks) {
@@ -94,10 +97,6 @@ public class TmdDocument {
                 this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
                 continue;
             }
-
-            // Remove extra line breaks after code blocks
-            html = html.Replace("\r\n</code></pre>", "</code></pre>");
-            html = html.Replace("\n</code></pre>", "</code></pre>");
 
             // Compute SHA-256 hash of generated HTML so we can track changes on client side
             var htmlHash = this.GetHashString(html);
