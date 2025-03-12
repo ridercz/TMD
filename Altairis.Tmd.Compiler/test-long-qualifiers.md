@@ -8,11 +8,11 @@ The main tutorial building blocks are steps. They are rendered as a table and au
 - - -
 Steps are separated by `- - -` line markings on separate line (technically, the separators are either `\r\n- - -\r\n` or `\n- - -\n`, so no whitespace is allowed).
 - - -
-Steps can contain any markdown code including **bold**, _italics_, ~~striketrough~~, `inline code`
+Steps can contain any markdown code including **bold**, _italics_, ~~striketrough~~, `inline code`, ^superscripts^, ~subscripts~
 
     or code blocks.
 
-Of course it can also contain [hyperlinks](https://www.altairis.cz/). Automatic hyperlinks are disabled by default, because many tutorials contain sample or non-working URLs like www.example.com.
+Of course it can also contain [hyperlinks](https://www.altairis.cz/). Automatic hyperlinks are disabled by default, because many tutorials contain sample or non-working URLs like http://www.example.com.
 - - -
 For tutorials, we have to indicate added or removed code.
 
@@ -38,17 +38,18 @@ Pipe tables are supported:
 
 Grid tables are supported as well:
 
-+--------+-------+
-| Col 1  | Col 2 |
-+========+=======+
-| Sample | Text  |
-+--------+-------+
-| Sample | Text  |
-+--------+-------+
-| Sample | Text  |
-+--------+-------+
-| Footer | Text  |
-+--------+-------+
++----------+--------------------+
+| Col 1    | Col 2              |
++==========+====================+
+| Sample   | Text               |
++----------+--------------------+
+| Sample   | Text               |
++----------+--------------------+
+| Sample   | Text               |
++----------+--------------------+
+| Sample   | Text               |
++----------+--------------------+
+
 
 
 - - -
