@@ -240,7 +240,7 @@ public class TmdDocument {
             lineNumber++;
 
             // Check if line is step separator
-            if (line.Trim().Equals(BlockSeparator, StringComparison.Ordinal) && !inCodeBlock) {
+            if (line.TrimEnd().Equals(BlockSeparator, StringComparison.Ordinal) && !inCodeBlock) {
                 // Save current step
                 block.Markdown = sb.ToString().Trim('\n');
                 this.Blocks.Add(block);
