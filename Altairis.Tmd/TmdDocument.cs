@@ -144,6 +144,10 @@ public class TmdDocument {
         foreach (var block in this.Blocks) {
             // Check for empty content
             if (string.IsNullOrWhiteSpace(block.Markdown)) {
+                // Do nothing if this is last block
+                if (block == this.Blocks.Last()) break;
+
+                // Otherwise mark block as empty and continue
                 block.Type = TmdBlockType.Empty;
                 this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
                 continue;
