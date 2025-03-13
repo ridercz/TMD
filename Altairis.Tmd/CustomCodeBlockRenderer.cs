@@ -2,8 +2,9 @@
 using Markdig.Renderers;
 using Markdig.Syntax;
 using Markdig;
+using Markdig.Helpers;
 
-namespace Altairis.Tmd; 
+namespace Altairis.Tmd;
 
 /// <summary>
 /// An HTML renderer for a <see cref="CodeBlock"/> and <see cref="FencedCodeBlock"/>.
@@ -11,13 +12,37 @@ namespace Altairis.Tmd;
 /// <seealso cref="HtmlObjectRenderer{CodeBlock}" />
 public class CustomCodeBlockRenderer : HtmlObjectRenderer<CodeBlock> {
     protected override void Write(HtmlRenderer renderer, CodeBlock obj) {
-        // var info = (obj as FencedCodeBlock)?.Info;
+        var info = (obj as FencedCodeBlock)?.Info;
+        var tags = info?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? [];
 
-        renderer.EnsureLine();
-        renderer.WriteLine("<pre>");
-        renderer.WriteLeafRawLines(obj, true, true, true);
-        renderer.WriteLine("</pre>");
-        renderer.EnsureLine();
+        if (tags.Contains("edit")) {
+            // Mark added lines with <ins> and removed lines with <del>
+            renderer.WriteLine($"<pre class=\"{info}\">");
+            foreach (StringLine item in obj.Lines) {
+                var line = item.ToString();
+                if (line.StartsWith("+ ")) {
+                    renderer.Write("<ins>");
+                    renderer.WriteEscape(line[2..]);
+                    renderer.WriteLine("</ins>");
+                } else if (line.StartsWith("- ")) {
+                    renderer.Write("<del>");
+                    renderer.WriteEscape(line[2..]);
+                    renderer.WriteLine("</del>");
+                } else {
+                    renderer.WriteEscape(line);
+                    renderer.WriteLine();
+                }
+            }
+            renderer.WriteLine("</pre>");
+            return;
+        } else {
+            // Render as plain text
+            renderer.EnsureLine();
+            renderer.WriteLine($"<pre class=\"{info}\">");
+            renderer.WriteLeafRawLines(obj, true, true, true);
+            renderer.WriteLine("</pre>");
+            renderer.EnsureLine();
+        }
     }
 }
 

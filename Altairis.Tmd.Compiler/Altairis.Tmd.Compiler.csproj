@@ -59,6 +59,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="test-code.md">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="test-short-qualifiers.md">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
