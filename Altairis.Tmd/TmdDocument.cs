@@ -82,19 +82,9 @@ public class TmdDocument {
     /// Saves the document to a file.
     /// </summary>
     /// <param name="fileName">The path to the file to save the document to.</param>
-    public void SaveFile(string fileName) {
+    public void Save(string fileName) {
         using var writer = new StreamWriter(fileName);
         this.Save(writer);
-    }
-
-    /// <summary>
-    /// Saves the document to a string target.
-    /// </summary>
-    /// <param name="target">The path to save the document content as a string.</param>
-    public void Save(string target) {
-        using var writer = new StringWriter();
-        this.Save(writer);
-        File.WriteAllText(target, writer.ToString());
     }
 
     /// <summary>
@@ -141,6 +131,16 @@ public class TmdDocument {
             // Write block separator if not last or empty block
             if (!isLastBlock && block.Type != TmdBlockType.Empty) writer.WriteLine(BlockSeparator);
         }
+    }
+
+    /// <summary>
+    /// Saves the document to a string.
+    /// </summary>
+    /// <returns>The TMD source code of document.</returns>
+    public string Save() {
+        using var writer = new StringWriter();
+        this.Save(writer);
+        return writer.ToString();
     }
 
     // Rendering methods
