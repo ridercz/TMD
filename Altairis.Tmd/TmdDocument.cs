@@ -3,6 +3,10 @@ using Markdig;
 
 namespace Altairis.Tmd;
 
+/// <summary>
+/// Represents a TMD (Tutorial MarkDown) document, which consists of multiple blocks of content.
+/// Provides methods for loading, saving, and rendering the document.
+/// </summary>
 public class TmdDocument {
     private const string BlockSeparator = "- - -";
     private const string QualifierShortPrefix = "(";
@@ -17,24 +21,48 @@ public class TmdDocument {
 
     // Properties
 
+    /// <summary>
+    /// Gets or sets the list of blocks in the document.
+    /// </summary>
     public IList<TmdBlock> Blocks { get; set; } = [];
 
+    /// <summary>
+    /// Gets or sets the list of warnings generated during document processing.
+    /// </summary>
     public IList<TmdWarning> Warnings { get; set; } = [];
 
+    /// <summary>
+    /// Gets or sets the rendering options for the document.
+    /// </summary>
     public TmdRenderOptions RenderOptions { get; set; } = new TmdRenderOptions();
 
     // Load methods
 
+    /// <summary>
+    /// Loads the document from a file.
+    /// </summary>
+    /// <param name="fileName">The path to the file to load.</param>
+    /// <returns>True if the document was loaded successfully; otherwise, false.</returns>
     public bool LoadFile(string fileName) {
         using var reader = new StreamReader(fileName);
         return this.Load(reader);
     }
 
+    /// <summary>
+    /// Loads the document from a string source.
+    /// </summary>
+    /// <param name="source">The string containing the document content.</param>
+    /// <returns>True if the document was loaded successfully; otherwise, false.</returns>
     public bool Load(string source) {
         using var reader = new StringReader(source);
         return this.Load(reader);
     }
 
+    /// <summary>
+    /// Loads the document from a <see cref="TextReader"/>.
+    /// </summary>
+    /// <param name="reader">The <see cref="TextReader"/> to read the document content from.</param>
+    /// <returns>True if the document was loaded successfully; otherwise, false.</returns>
     public bool Load(TextReader reader) {
         this.Blocks.Clear();
         this.Warnings.Clear();
@@ -50,17 +78,29 @@ public class TmdDocument {
 
     // Save methods
 
+    /// <summary>
+    /// Saves the document to a file.
+    /// </summary>
+    /// <param name="fileName">The path to the file to save the document to.</param>
     public void SaveFile(string fileName) {
         using var writer = new StreamWriter(fileName);
         this.Save(writer);
     }
 
+    /// <summary>
+    /// Saves the document to a string target.
+    /// </summary>
+    /// <param name="target">The path to save the document content as a string.</param>
     public void Save(string target) {
         using var writer = new StringWriter();
         this.Save(writer);
         File.WriteAllText(target, writer.ToString());
     }
 
+    /// <summary>
+    /// Saves the document using a <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="TextWriter"/> to write the document content to.</param>
     public void Save(TextWriter writer) {
         if (this.Blocks.Count == 0) return;
 
@@ -105,23 +145,38 @@ public class TmdDocument {
 
     // Rendering methods
 
+    /// <summary>
+    /// Renders the document as HTML and writes it to a <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="TextWriter"/> to write the HTML content to.</param>
+    /// <returns>True if rendering was successful; otherwise, false.</returns>
     public bool RenderHtml(TextWriter writer) {
         var result = this.RenderHtml(out var htmlString);
         writer.Write(htmlString);
         return result;
     }
 
+    /// <summary>
+    /// Renders the document as HTML and saves it to a file.
+    /// </summary>
+    /// <param name="fileName">The path to the file to save the HTML content to.</param>
+    /// <returns>True if rendering was successful; otherwise, false.</returns>
     public bool RenderHtml(string fileName) {
         var result = this.RenderHtml(out var htmlString);
         File.WriteAllText(fileName, htmlString);
         return result;
     }
 
+    /// <summary>
+    /// Renders the document as HTML and returns it as a string.
+    /// </summary>
+    /// <param name="htmlString">The rendered HTML content.</param>
+    /// <returns>True if rendering was successful; otherwise, false.</returns>
     public bool RenderHtml(out string htmlString) {
         htmlString = string.Empty;
         if (this.Blocks.Count == 0) return true;
 
-        // Prepare ouptut
+        // Prepare output
         var sb = new StringBuilder();
         var tableOpen = false;
 
@@ -192,6 +247,9 @@ public class TmdDocument {
 
     // Helper methods
 
+    /// <summary>
+    /// Qualifies the blocks in the document by determining their type and assigning step numbers.
+    /// </summary>
     private void QualifyBlocks() {
         var stepNumber = 1;
         foreach (var block in this.Blocks) {
@@ -285,6 +343,10 @@ public class TmdDocument {
         }
     }
 
+    /// <summary>
+    /// Loads the blocks from a <see cref="TextReader"/> by separating them based on the block separator.
+    /// </summary>
+    /// <param name="reader">The <see cref="TextReader"/> to read the blocks from.</param>
     private void LoadBlocks(TextReader reader) {
         var block = new TmdBlock();
         var inCodeBlock = false;
