@@ -94,37 +94,7 @@ public static class Commands {
         if (doc.Warnings.Count > 0) {
             Console.WriteLine("  Warnings:");
             foreach (var warning in doc.Warnings) {
-                var lineNumber = doc.Blocks[warning.BlockNumber].StartingLineNumber;
-                switch (warning.Type) {
-                    case TmdWarningType.ContentIsEmpty:
-                        Console.WriteLine($"    Empty block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.EmptyBlockName:
-                        Console.WriteLine($"    Empty name of block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.DuplicateBlockName:
-                        Console.WriteLine($"    Duplicate name '{warning.ContextValue}' of block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.UnknownQualifier:
-                        Console.WriteLine($"    Unknown qualifier '{warning.ContextValue}' in block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.EmptyQualifier:
-                        Console.WriteLine($"    Empty qualifier in block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.UnknownBlockNameLink:
-                        Console.WriteLine($"    Unknown link to block named '{warning.ContextValue}' in block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    case TmdWarningType.Exception:
-                        Console.WriteLine($"    Exception '{warning.ContextValue}' in block {warning.BlockNumber} starting at line {lineNumber}");
-                        break;
-                    default:
-                        if (warning.ContextValue == null) {
-                            Console.WriteLine($"    {warning.Type} in block {warning.BlockNumber} starting at line {lineNumber}");
-                        } else {
-                            Console.WriteLine($"    {warning.Type} ({warning.ContextValue}) in block {warning.BlockNumber} starting at line {lineNumber}");
-                        }
-                        break;
-                }
+                Console.WriteLine("    " + warning.ToString());
             }
         }
 

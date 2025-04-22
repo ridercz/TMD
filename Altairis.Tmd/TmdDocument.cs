@@ -89,12 +89,12 @@ public class TmdDocument {
                 html = Markdown.ToHtml(block.Markdown, pipeline).Trim();
             } catch (Exception ex) {
                 html = $"<p><b>{ex.Message}</b></p><pre>{ex}</pre>";
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.Exception, ex.Message));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.Exception));
             }
 
             // Check for empty content
             if (string.IsNullOrWhiteSpace(html)) {
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.ContentIsEmpty));
                 continue;
             }
 
@@ -149,7 +149,7 @@ public class TmdDocument {
 
                 // Otherwise mark block as empty and continue
                 block.Type = TmdBlockType.Empty;
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.ContentIsEmpty));
                 continue;
             }
 
@@ -170,7 +170,7 @@ public class TmdDocument {
                     // No content, remove qualifier
                     block.Markdown = string.Empty;
                     block.Type = TmdBlockType.Empty;
-                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.ContentIsEmpty));
+                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.ContentIsEmpty));
                     continue;
                 } else {
                     // Remove first line from block content
@@ -199,10 +199,10 @@ public class TmdDocument {
                 if (string.IsNullOrWhiteSpace(block.Name)) {
                     // Check for empty name
                     block.Name = null;
-                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.EmptyBlockName));
+                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.EmptyBlockName));
                 } else if (this.Blocks.Any(b => b != block && b.Name == block.Name)) {
                     // Check for duplicate name
-                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.DuplicateBlockName, block.Name));
+                    this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.DuplicateBlockName));
                 }
             } else if (qualifier.Equals(QualifierInformation, StringComparison.Ordinal)) {
                 // Information block
@@ -221,13 +221,13 @@ public class TmdDocument {
                 block.Type = TmdBlockType.NumberedStep;
                 block.StepNumber = stepNumber;
                 stepNumber++;
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.EmptyQualifier));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.EmptyQualifier));
             } else {
                 // Unknown qualifier
                 block.Type = TmdBlockType.NumberedStep;
                 block.StepNumber = stepNumber;
                 stepNumber++;
-                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), TmdWarningType.UnknownQualifier, qualifier));
+                this.Warnings.Add(new TmdWarning(this.Blocks.IndexOf(block), block.StartingLineNumber, TmdWarningType.UnknownQualifier));
             }
         }
     }
