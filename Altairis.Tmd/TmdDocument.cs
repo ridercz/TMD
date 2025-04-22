@@ -98,6 +98,8 @@ public class TmdDocument {
             var isLastBlock = block == this.Blocks.Last();
             switch (block.Type) {
                 case TmdBlockType.NumberedStep:
+                    // Named step
+                    if (!string.IsNullOrWhiteSpace(block.Name)) writer.WriteLine($"{QualifierShortPrefix}{QualifierName}{block.Name.Trim()}{QualifierShortSuffix}");
                     writer.WriteLine(block.Markdown);
                     break;
                 case TmdBlockType.PlainText:
