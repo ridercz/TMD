@@ -76,8 +76,6 @@ public class TmdDocument {
             .UseCustomCodeBlocks()
             .Build();
 
-        
-
         // Render all steps
         foreach (var block in this.Blocks) {
             // Skip empty blocks

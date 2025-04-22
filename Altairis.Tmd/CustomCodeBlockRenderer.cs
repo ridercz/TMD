@@ -1,8 +1,8 @@
-﻿using Markdig.Renderers.Html;
-using Markdig.Renderers;
-using Markdig.Syntax;
-using Markdig;
+﻿using Markdig;
 using Markdig.Helpers;
+using Markdig.Renderers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax;
 
 namespace Altairis.Tmd;
 
