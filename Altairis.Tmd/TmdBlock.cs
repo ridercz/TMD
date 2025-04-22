@@ -4,7 +4,6 @@ public enum TmdBlockType { Empty, NumberedStep, PlainText, Information, Warning,
 
 public class TmdBlock {
 
-
     public TmdBlockType Type { get; set; } = TmdBlockType.Empty;
 
     public int StepNumber { get; set; }
