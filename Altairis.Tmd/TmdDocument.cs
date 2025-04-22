@@ -48,6 +48,61 @@ public class TmdDocument {
         return this.Warnings.Count == 0;
     }
 
+    // Save methods
+
+    public void SaveFile(string fileName) {
+        using var writer = new StreamWriter(fileName);
+        this.Save(writer);
+    }
+
+    public void Save(string target) {
+        using var writer = new StringWriter();
+        this.Save(writer);
+        File.WriteAllText(target, writer.ToString());
+    }
+
+    public void Save(TextWriter writer) {
+        if (this.Blocks.Count == 0) return;
+
+        foreach (var block in this.Blocks) {
+            var isLastBlock = block == this.Blocks.Last();
+            switch (block.Type) {
+                case TmdBlockType.NumberedStep:
+                    writer.WriteLine(block.Markdown);
+                    break;
+                case TmdBlockType.PlainText:
+                    if (block.Markdown.StartsWith('#')) {
+                        // Implicit plaintext block by virtue of starting with heading
+                        writer.WriteLine(block.Markdown);
+                    } else {
+                        // Explicit plain text block
+                        writer.WriteLine($"{QualifierShortPrefix}{QualifierPlainText}{QualifierShortSuffix}");
+                        writer.WriteLine(block.Markdown);
+                    }
+                    break;
+                case TmdBlockType.Information:
+                    writer.WriteLine($"{QualifierShortPrefix}{QualifierInformation}{QualifierShortSuffix}");
+                    writer.WriteLine(block.Markdown);
+                    break;
+                case TmdBlockType.Warning:
+                    writer.WriteLine($"{QualifierShortPrefix}{QualifierWarning}{QualifierShortSuffix}");
+                    writer.WriteLine(block.Markdown);
+                    break;
+                case TmdBlockType.Download:
+                    writer.WriteLine($"{QualifierShortPrefix}{QualifierDownload}{QualifierShortSuffix}");
+                    writer.WriteLine(block.Markdown);
+                    break;
+                case TmdBlockType.Empty:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(block.Type), block.Type, "Unknown block type");
+            }
+
+            // Write block separator if not last or empty block
+            if (!isLastBlock && block.Type != TmdBlockType.Empty) writer.WriteLine(BlockSeparator);
+        }
+    }
+
     // Rendering methods
 
     public bool RenderHtml(TextWriter writer) {
