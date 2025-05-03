@@ -100,18 +100,38 @@ public class TmdDocument {
     }
 
     /// <summary>
+    /// Saves the document to a string.
+    /// </summary>
+    /// <returns>The TMD source code of document.</returns>
+    public string Save() {
+        using var writer = new StringWriter();
+        this.Save(writer);
+        return writer.ToString();
+    }
+
+    /// <summary>
     /// Saves the document using a <see cref="TextWriter"/>.
     /// </summary>
     /// <param name="writer">The <see cref="TextWriter"/> to write the document content to.</param>
-    public void Save(TextWriter writer) {
+    public void Save(TextWriter writer) => this.Save(writer, false);
+
+    /// <summary>
+    /// Saves the document using a <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="TextWriter"/> to write the document content to.</param>
+    /// <param name="useLongQualifiers">Indicates whether to use long qualifiers(<c>true</c>) or short ones (<c>false</c>).</param>
+    public void Save(TextWriter writer, bool useLongQualifiers) {
         if (this.Blocks.Count == 0) return;
+
+        var qualifierPrefix = useLongQualifiers ? QualifierLongPrefix + " " : QualifierShortPrefix;
+        var qualifierSuffix = useLongQualifiers ? " " + QualifierLongSuffix : QualifierShortSuffix;
 
         foreach (var block in this.Blocks) {
             var isLastBlock = block == this.Blocks.Last();
             switch (block.Type) {
                 case TmdBlockType.NumberedStep:
                     // Named step
-                    if (!string.IsNullOrWhiteSpace(block.Name)) writer.WriteLine($"{QualifierShortPrefix}{QualifierName}{block.Name.Trim()}{QualifierShortSuffix}");
+                    if (!string.IsNullOrWhiteSpace(block.Name)) writer.WriteLine($"{qualifierPrefix}{QualifierName}{block.Name.Trim()}{qualifierSuffix}");
                     writer.WriteLine(block.Markdown);
                     break;
                 case TmdBlockType.PlainText:
@@ -120,20 +140,20 @@ public class TmdDocument {
                         writer.WriteLine(block.Markdown);
                     } else {
                         // Explicit plain text block
-                        writer.WriteLine($"{QualifierShortPrefix}{QualifierPlainText}{QualifierShortSuffix}");
+                        writer.WriteLine($"{qualifierPrefix}{QualifierPlainText}{qualifierSuffix}");
                         writer.WriteLine(block.Markdown);
                     }
                     break;
                 case TmdBlockType.Information:
-                    writer.WriteLine($"{QualifierShortPrefix}{QualifierInformation}{QualifierShortSuffix}");
+                    writer.WriteLine($"{qualifierPrefix}{QualifierInformation}{qualifierSuffix}");
                     writer.WriteLine(block.Markdown);
                     break;
                 case TmdBlockType.Warning:
-                    writer.WriteLine($"{QualifierShortPrefix}{QualifierWarning}{QualifierShortSuffix}");
+                    writer.WriteLine($"{qualifierPrefix}{QualifierWarning}{qualifierSuffix}");
                     writer.WriteLine(block.Markdown);
                     break;
                 case TmdBlockType.Download:
-                    writer.WriteLine($"{QualifierShortPrefix}{QualifierDownload}{QualifierShortSuffix}");
+                    writer.WriteLine($"{qualifierPrefix}{QualifierDownload}{qualifierSuffix}");
                     writer.WriteLine(block.Markdown);
                     break;
                 case TmdBlockType.Empty:
@@ -145,16 +165,6 @@ public class TmdDocument {
             // Write block separator if not last or empty block
             if (!isLastBlock && block.Type != TmdBlockType.Empty) writer.WriteLine(BlockSeparator);
         }
-    }
-
-    /// <summary>
-    /// Saves the document to a string.
-    /// </summary>
-    /// <returns>The TMD source code of document.</returns>
-    public string Save() {
-        using var writer = new StringWriter();
-        this.Save(writer);
-        return writer.ToString();
     }
 
     // Rendering methods
