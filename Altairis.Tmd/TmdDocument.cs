@@ -67,13 +67,25 @@ public class TmdDocument {
         this.Blocks.Clear();
         this.Warnings.Clear();
 
-        // Separate all blocks and load them
         this.LoadBlocks(reader);
-
-        // Qualify blocks
         this.QualifyBlocks();
+        this.NumberBlocks();
 
         return this.Warnings.Count == 0;
+    }
+
+    // Index methods
+
+    public void NumberBlocks() {
+        var stepNumber = 1;
+        foreach (var block in this.Blocks) {
+            if (block.Type == TmdBlockType.NumberedStep) {
+                block.StepNumber = stepNumber;
+                stepNumber++;
+            } else {
+                block.StepNumber = 0;
+            }
+        }
     }
 
     // Save methods
@@ -178,6 +190,9 @@ public class TmdDocument {
         htmlString = string.Empty;
         if (this.Blocks.Count == 0) return true;
 
+        // Renumber blocks
+        this.NumberBlocks();
+
         // Prepare output
         var sb = new StringBuilder();
         var tableOpen = false;
@@ -212,19 +227,22 @@ public class TmdDocument {
             var htmlHash = this.GetHashString(html);
 
             if (block.Type == TmdBlockType.PlainText) {
-                // Plain (non-table) step
+                // Plain (non-table) step - close table if open
                 if (tableOpen) {
                     sb.AppendLine(this.RenderOptions.TableEndTemplate);
                     tableOpen = false;
                 }
+
+                // Render plain text block
                 sb.AppendLine(html);
             } else {
-                // Table steps
+                // Table steps - open table if not already open
                 if (!tableOpen) {
                     sb.AppendLine(this.RenderOptions.TableBeginTemplate);
                     tableOpen = true;
                 }
 
+                // Render appropriate table row based on block type
                 if (block.Type == TmdBlockType.Information) {
                     sb.AppendLine(string.Format(this.RenderOptions.InformationTemplate, html));
                 } else if (block.Type == TmdBlockType.Warning) {
