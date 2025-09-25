@@ -12,17 +12,17 @@ public class TmdRenderOptions {
 
     public string TableEndTemplate { get; set; } = "</table>";
 
-    public string NumberedStepTemplate { get; set; } = "<tr data-step-seqid=\"{0}\" data-step-hash=\"{1}\">\r\n\t<th>{0}.</th>\r\n\t<td>{2}</td>\r\n</tr>";
+    public string NumberedStepTemplate { get; set; } = "<tr data-block-index=\"{3}\" data-step-seqid=\"{0}\" data-step-hash=\"{1}\">\r\n\t<th>{0}.</th>\r\n\t<td>{2}</td>\r\n</tr>";
 
-    public string NamedStepTemplate { get; set; } = "<tr id=\"{0}\" data-step-seqid=\"{1}\" data-step-hash=\"{2}\">\r\n\t<th>{1}.</th>\r\n\t<td>{3}</td>\r\n</tr>";
+    public string NamedStepTemplate { get; set; } = "<tr data-block-index=\"{4}\" id=\"{0}\" data-step-seqid=\"{1}\" data-step-hash=\"{2}\">\r\n\t<th>{1}.</th>\r\n\t<td>{3}</td>\r\n</tr>";
 
-    public string InformationTemplate { get; set; } = "<tr class=\"information\">\r\n\t<th>&#x1F6C8;</th>\r\n\t<td>{0}</td>\r\n</tr>";
+    public string InformationTemplate { get; set; } = "<tr data-block-index=\"{1}\" class=\"information\">\r\n\t<th>&#x1F6C8;</th>\r\n\t<td>{0}</td>\r\n</tr>";
 
-    public string WarningTemplate { get; set; } = "<tr class=\"warning\">\r\n\t<th>&#x26A0;</th>\r\n\t<td>{0}</td>\r\n</tr>";
+    public string WarningTemplate { get; set; } = "<tr data-block-index=\"{1}\" class=\"warning\">\r\n\t<th>&#x26A0;</th>\r\n\t<td>{0}</td>\r\n</tr>";
 
-    public string DownloadTemplate { get; set; } = "<tr class=\"download\">\r\n\t<th>&#x1F5AB;</th>\r\n\t<td>{0}</td>\r\n</tr>";
+    public string DownloadTemplate { get; set; } = "<tr data-block-index=\"{1}\" class=\"download\">\r\n\t<th>&#x1F5AB;</th>\r\n\t<td>{0}</td>\r\n</tr>";
 
-    public string PlainTemplate { get; set; } = "<tr class=\"plain\">\r\n\t<td colspan=\"2\">{0}</td>\r\n</tr>";
+    public string PlainTemplate { get; set; } = "<tr data-block-index=\"{1}\" class=\"plain\">\r\n\t<td colspan=\"2\">{0}</td>\r\n</tr>";
 
     public string AfterStepTemplate { get; set; } = string.Empty;
 

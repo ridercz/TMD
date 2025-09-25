@@ -220,7 +220,9 @@ public class TmdDocument {
             .Build();
 
         // Render all steps
-        foreach (var block in this.Blocks) {
+        for (var i = 0; i < this.Blocks.Count; i++) {
+            var block = this.Blocks[i];
+
             // Skip empty blocks
             if (block.Type == TmdBlockType.Empty) continue;
 
@@ -246,7 +248,7 @@ public class TmdDocument {
                 // Plain step 
                 if (this.RenderOptions.SingleTableLayout) {
                     // Render plain text block in table
-                    sb.AppendLine(string.Format(this.RenderOptions.PlainTemplate, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.PlainTemplate, html, i));
                 } else {
                     // Render plain text block outside table
                     if (tableOpen) {
@@ -264,20 +266,20 @@ public class TmdDocument {
 
                 // Render appropriate table row based on block type
                 if (block.Type == TmdBlockType.Information) {
-                    sb.AppendLine(string.Format(this.RenderOptions.InformationTemplate, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.InformationTemplate, html, i));
                 } else if (block.Type == TmdBlockType.Warning) {
-                    sb.AppendLine(string.Format(this.RenderOptions.WarningTemplate, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.WarningTemplate, html, i));
                 } else if (block.Type == TmdBlockType.Download) {
-                    sb.AppendLine(string.Format(this.RenderOptions.DownloadTemplate, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.DownloadTemplate, html, i));
                 } else if (string.IsNullOrWhiteSpace(block.Name)) {
-                    sb.AppendLine(string.Format(this.RenderOptions.NumberedStepTemplate, block.StepNumber, htmlHash, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.NumberedStepTemplate, block.StepNumber, htmlHash, html, i));
                 } else {
-                    sb.AppendLine(string.Format(this.RenderOptions.NamedStepTemplate, block.Name, block.StepNumber, htmlHash, html));
+                    sb.AppendLine(string.Format(this.RenderOptions.NamedStepTemplate, block.Name, block.StepNumber, htmlHash, html, i));
                 }
             }
 
             // Append after-step template if specified
-            if (!string.IsNullOrWhiteSpace(this.RenderOptions.AfterStepTemplate)) sb.AppendLine(this.RenderOptions.AfterStepTemplate);
+            if (!string.IsNullOrWhiteSpace(this.RenderOptions.AfterStepTemplate)) sb.AppendLine(string.Format(this.RenderOptions.AfterStepTemplate, i));
         }
 
         // Close table if open
