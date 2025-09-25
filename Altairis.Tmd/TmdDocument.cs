@@ -76,6 +76,10 @@ public class TmdDocument {
 
     // Index methods
 
+    /// <summary>
+    /// Renumbers the blocks in the document, assigning sequential step numbers to blocks of type <see cref="TmdBlockType.NumberedStep"/>.
+    /// All other block types have their <see cref="TmdBlock.StepNumber"/> set to 0.
+    /// </summary>
     public void NumberBlocks() {
         var stepNumber = 1;
         foreach (var block in this.Blocks) {
@@ -430,6 +434,13 @@ public class TmdDocument {
         this.Blocks.Add(block);
     }
 
+    /// <summary>
+    /// Computes the SHA-256 hash of the specified string and returns it as a Base64-encoded string (without trailing equals).
+    /// Used to track changes in rendered HTML content.
+    /// </summary>
+    /// <param name="s">The input string to hash.</param>
+    /// <returns>The Base64-encoded SHA-256 hash of the input string, with trailing equals removed.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input string is null, empty, or consists only of whitespace.</exception>
     protected string GetHashString(string s) {
         if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(s));
 
