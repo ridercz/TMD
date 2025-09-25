@@ -9,8 +9,11 @@ public static class Commands {
     [Action(Description = "Compile TMD document to HTML")]
     public static void Compile(
         [Required] string path,
+        [Optional(false, "s", Description = "Single table layout")] bool singleTableLayout,
         [Optional(null, "t", Description = "Path to HTML template file")] string htmlTemplateFile,
         [Optional("<!--body-->", "tb", Description = "Placeholder where to put the compiled markup")] string templatePlaceholder,
+        [Optional("", "as", Description = "After step template (appended after each step)")] string afterStepTemplate,
+
         [Optional(false, Description = "Debug mode")] bool debug) {
 
         // Set debug mode
@@ -32,7 +35,7 @@ public static class Commands {
             // Check if path is file or directory
             if (File.Exists(path)) {
                 // Compile single file
-                CompileFile(path, htmlTemplate, templatePlaceholder);
+                CompileFile(path, htmlTemplate, templatePlaceholder, singleTableLayout, afterStepTemplate);
             } else if (Directory.Exists(path)) {
                 // Compile all files in directory
                 var files = Directory.GetFiles(path, "*.md");
@@ -42,7 +45,7 @@ public static class Commands {
                     return;
                 }
                 foreach (var file in files) {
-                    CompileFile(file, htmlTemplate, templatePlaceholder);
+                    CompileFile(file, htmlTemplate, templatePlaceholder, singleTableLayout, afterStepTemplate);
                 }
             } else {
                 Console.WriteLine("Path '{0}' does not exist.", path);
@@ -59,9 +62,11 @@ public static class Commands {
         }
     }
 
-    private static void CompileFile(string path, string htmlTemplate, string templatePlaceholder) {
+    private static void CompileFile(string path, string htmlTemplate, string templatePlaceholder, bool singleTableLayout, string afterStepTemplate) {
         var outputPath = path + ".html";
         var doc = new TmdDocument();
+        doc.RenderOptions.SingleTableLayout = singleTableLayout;
+        doc.RenderOptions.AfterStepTemplate = afterStepTemplate;
 
         Console.WriteLine($"Processing {path}:");
 

@@ -207,6 +207,12 @@ public class TmdDocument {
         var sb = new StringBuilder();
         var tableOpen = false;
 
+        // Open table if single-table layout is requested
+        if (this.RenderOptions.SingleTableLayout) {
+            sb.AppendLine(this.RenderOptions.TableBeginTemplate);
+            tableOpen = true;
+        }
+
         // Prepare Markdown pipeline builder
         var pipeline = this.RenderOptions.MarkdownPipelineBuilder
             .UseStepLinks(this.Blocks)
@@ -237,14 +243,18 @@ public class TmdDocument {
             var htmlHash = this.GetHashString(html);
 
             if (block.Type == TmdBlockType.PlainText) {
-                // Plain (non-table) step - close table if open
-                if (tableOpen) {
-                    sb.AppendLine(this.RenderOptions.TableEndTemplate);
-                    tableOpen = false;
+                // Plain step 
+                if (this.RenderOptions.SingleTableLayout) {
+                    // Render plain text block in table
+                    sb.AppendLine(string.Format(this.RenderOptions.PlainTemplate, html));
+                } else {
+                    // Render plain text block outside table
+                    if (tableOpen) {
+                        sb.AppendLine(this.RenderOptions.TableEndTemplate);
+                        tableOpen = false;
+                    }
+                    sb.AppendLine(html);
                 }
-
-                // Render plain text block
-                sb.AppendLine(html);
             } else {
                 // Table steps - open table if not already open
                 if (!tableOpen) {
@@ -265,6 +275,9 @@ public class TmdDocument {
                     sb.AppendLine(string.Format(this.RenderOptions.NamedStepTemplate, block.Name, block.StepNumber, htmlHash, html));
                 }
             }
+
+            // Append after-step template if specified
+            if (!string.IsNullOrWhiteSpace(this.RenderOptions.AfterStepTemplate)) sb.AppendLine(this.RenderOptions.AfterStepTemplate);
         }
 
         // Close table if open

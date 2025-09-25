@@ -2,7 +2,7 @@
   "profiles": {
     "Altairis.Tmd.Compiler": {
       "commandName": "Project",
-      "commandLineArgs": ". /debug"
+      "commandLineArgs": ". /s /debug"
     }
   }
 }

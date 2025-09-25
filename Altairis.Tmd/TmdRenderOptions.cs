@@ -6,6 +6,8 @@ namespace Altairis.Tmd;
 
 public class TmdRenderOptions {
 
+    public bool SingleTableLayout { get; set; } = false;
+
     public string TableBeginTemplate { get; set; } = "<table class=\"steps\">";
 
     public string TableEndTemplate { get; set; } = "</table>";
@@ -19,6 +21,10 @@ public class TmdRenderOptions {
     public string WarningTemplate { get; set; } = "<tr class=\"warning\">\r\n\t<th>&#x26A0;</th>\r\n\t<td>{0}</td>\r\n</tr>";
 
     public string DownloadTemplate { get; set; } = "<tr class=\"download\">\r\n\t<th>&#x1F5AB;</th>\r\n\t<td>{0}</td>\r\n</tr>";
+
+    public string PlainTemplate { get; set; } = "<tr class=\"plain\">\r\n\t<td colspan=\"2\">{0}</td>\r\n</tr>";
+
+    public string AfterStepTemplate { get; set; } = string.Empty;
 
     public MarkdownPipelineBuilder MarkdownPipelineBuilder { get; set; } = new MarkdownPipelineBuilder()
             .UseEmphasisExtras()
@@ -34,10 +40,12 @@ public class TmdRenderOptions {
         var options = new TmdRenderOptions();
 
         // Load templates from resource if present
+        options.AfterStepTemplate = rm.GetString(nameof(AfterStepTemplate)) ?? options.AfterStepTemplate;
         options.DownloadTemplate = rm.GetString(nameof(DownloadTemplate)) ?? options.DownloadTemplate;
         options.InformationTemplate = rm.GetString(nameof(InformationTemplate)) ?? options.InformationTemplate;
         options.NamedStepTemplate = rm.GetString(nameof(NamedStepTemplate)) ?? options.NamedStepTemplate;
         options.NumberedStepTemplate = rm.GetString(nameof(NumberedStepTemplate)) ?? options.NumberedStepTemplate;
+        options.PlainTemplate = rm.GetString(nameof(PlainTemplate)) ?? options.PlainTemplate;
         options.TableBeginTemplate = rm.GetString(nameof(TableBeginTemplate)) ?? options.TableBeginTemplate;
         options.TableEndTemplate = rm.GetString(nameof(TableEndTemplate)) ?? options.TableEndTemplate;
         options.WarningTemplate = rm.GetString(nameof(WarningTemplate)) ?? options.WarningTemplate;
